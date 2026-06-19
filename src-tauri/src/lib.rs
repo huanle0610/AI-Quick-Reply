@@ -9,7 +9,7 @@ use std::{
     time::{Duration, Instant},
 };
 use tauri::{
-    menu::{Menu, MenuItem},
+    menu::{AboutMetadata, AboutMetadataBuilder, Menu, MenuItem, PredefinedMenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Emitter, Manager, PhysicalPosition, PhysicalSize, WindowEvent,
 };
@@ -348,12 +348,33 @@ fn ctrl_is_down() -> bool {
     unsafe { GetAsyncKeyState(VK_CONTROL as i32) < 0 }
 }
 
+fn tray_tooltip_text() -> &'static str {
+    AUTO_START_APP_NAME
+}
+
+fn tray_about_menu_text() -> &'static str {
+    "About"
+}
+
+fn tray_about_metadata() -> AboutMetadata<'static> {
+    AboutMetadataBuilder::new()
+        .name(Some(AUTO_START_APP_NAME))
+        .version(Some(env!("CARGO_PKG_VERSION")))
+        .build()
+}
+
 fn setup_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let show_hide = MenuItem::with_id(app, "show_hide", "Show/Hide", true, None::<&str>)?;
+    let about = PredefinedMenuItem::about(
+        app,
+        Some(tray_about_menu_text()),
+        Some(tray_about_metadata()),
+    )?;
     let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-    let menu = Menu::with_items(app, &[&show_hide, &quit])?;
+    let menu = Menu::with_items(app, &[&show_hide, &about, &quit])?;
 
     let mut builder = TrayIconBuilder::new()
+        .tooltip(tray_tooltip_text())
         .menu(&menu)
         .show_menu_on_left_click(false)
         .on_tray_icon_event(|tray, event| {
@@ -490,6 +511,24 @@ mod tests {
         assert_eq!(ctrl_hold_duration_from_seconds(0), Duration::from_secs(1));
         assert_eq!(ctrl_hold_duration_from_seconds(7), Duration::from_secs(7));
         assert_eq!(ctrl_hold_duration_from_seconds(99), Duration::from_secs(30));
+    }
+
+    #[test]
+    fn tray_tooltip_uses_the_app_name() {
+        assert_eq!(tray_tooltip_text(), "AI Quick Reply");
+    }
+
+    #[test]
+    fn tray_about_menu_uses_clear_label() {
+        assert_eq!(tray_about_menu_text(), "About");
+    }
+
+    #[test]
+    fn tray_about_metadata_uses_app_identity() {
+        let metadata = tray_about_metadata();
+
+        assert_eq!(metadata.name.as_deref(), Some("AI Quick Reply"));
+        assert_eq!(metadata.version.as_deref(), Some(env!("CARGO_PKG_VERSION")));
     }
 
     #[test]
