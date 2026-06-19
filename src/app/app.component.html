@@ -1,12 +1,16 @@
-<main class="shell">
+<main class="shell" [class.full-mode]="viewMode() === 'full'">
   <header class="toolbar">
     <div>
       <h1>AI Quick Reply</h1>
       <p>{{ status() }}</p>
     </div>
-    <button class="icon-button" type="button" title="Manage phrases" (click)="managerOpen.set(!managerOpen())">
-      {{ managerOpen() ? "Done" : "Manage" }}
-    </button>
+    @if (viewMode() === "compact") {
+      <button class="icon-button" type="button" title="Full mode" (click)="expandToFull()">Full</button>
+    } @else {
+      <button class="icon-button" type="button" title="Manage phrases" (click)="managerOpen.set(!managerOpen())">
+        {{ managerOpen() ? "Done" : "Manage" }}
+      </button>
+    }
   </header>
 
   <section class="phrase-grid" aria-label="Quick replies">
@@ -19,8 +23,33 @@
     }
   </section>
 
-  @if (managerOpen() && config(); as currentConfig) {
+  @if (viewMode() === "full" && managerOpen() && config(); as currentConfig) {
     <section class="manager" aria-label="Phrase manager">
+      <div class="settings-list">
+        <div class="settings-row">
+          <label for="ctrlHoldSeconds">Ctrl hold seconds</label>
+          <input
+            id="ctrlHoldSeconds"
+            name="ctrlHoldSeconds"
+            type="number"
+            min="1"
+            max="30"
+            step="1"
+            [ngModel]="currentConfig.ctrlHoldSeconds"
+            (ngModelChange)="updateCtrlHoldSeconds($event)"
+          />
+        </div>
+        <label class="settings-check">
+          <input
+            name="autoStartEnabled"
+            type="checkbox"
+            [ngModel]="currentConfig.autoStartEnabled"
+            (ngModelChange)="updateAutoStartEnabled($event)"
+          />
+          <span>Start at login</span>
+        </label>
+      </div>
+
       <div class="add-row">
         <input name="newLabel" placeholder="Label" [(ngModel)]="newLabel" />
         <input name="newText" placeholder="Text to send" [(ngModel)]="newText" />
@@ -55,4 +84,7 @@
     </section>
   }
 </main>
+
+
+
 

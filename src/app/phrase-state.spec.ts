@@ -4,6 +4,8 @@ import type { AppConfig } from "./types";
 
 const baseConfig = (): AppConfig => ({
   hotkey: "Ctrl+Alt+Space",
+  ctrlHoldSeconds: 5,
+  autoStartEnabled: true,
   phrases: [
     { id: "go-on", label: "Go on", text: "go on", enabled: true },
     { id: "commit", label: "Commit", text: "commit", enabled: true },
@@ -47,5 +49,8 @@ describe("phrase state", () => {
     expect(movedUp.phrases.map((phrase) => phrase.id)).toEqual(["go-on", "commit"]);
   });
 });
+
+
+
 
 

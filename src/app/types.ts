@@ -7,5 +7,8 @@ export type Phrase = {
 
 export type AppConfig = {
   hotkey: string;
+  ctrlHoldSeconds: number;
+  autoStartEnabled: boolean;
   phrases: Phrase[];
 };
+

@@ -1,7 +1,9 @@
-import { Component, OnInit, signal } from "@angular/core";
+import { Component, OnDestroy, OnInit, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { listen } from "@tauri-apps/api/event";
 import { addPhrase, deletePhrase, movePhrase, updatePhrase } from "./phrase-state";
-import { loadConfig, saveConfig, sendPhrase } from "./api";
+import { expandViewMode, initialViewMode, type ViewMode } from "./view-mode";
+import { loadConfig, saveConfig, sendPhrase, setWindowMode } from "./api";
 import type { AppConfig, Phrase } from "./types";
 
 @Component({
@@ -10,16 +12,25 @@ import type { AppConfig, Phrase } from "./types";
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   readonly config = signal<AppConfig | null>(null);
   readonly managerOpen = signal(false);
   readonly status = signal("Loading...");
+  readonly viewMode = signal<ViewMode>(initialViewMode());
 
   newLabel = "";
   newText = "";
 
+  private unlistenViewMode: (() => void) | null = null;
+
   async ngOnInit(): Promise<void> {
     try {
+      this.unlistenViewMode = await listen<ViewMode>("view-mode", (event) => {
+        this.viewMode.set(event.payload);
+        if (event.payload === "compact") {
+          this.managerOpen.set(false);
+        }
+      });
       this.config.set(await loadConfig());
       this.status.set("Ready");
     } catch (error) {
@@ -27,8 +38,21 @@ export class AppComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.unlistenViewMode?.();
+  }
+
   enabledPhrases(): Phrase[] {
     return this.config()?.phrases.filter((phrase) => phrase.enabled) ?? [];
+  }
+
+  async expandToFull(): Promise<void> {
+    this.viewMode.set(expandViewMode(this.viewMode()));
+    try {
+      await setWindowMode("full");
+    } catch (error) {
+      this.status.set(this.messageFromError(error));
+    }
   }
 
   async send(phrase: Phrase): Promise<void> {
@@ -52,6 +76,25 @@ export class AppComponent implements OnInit {
     await this.persist(addPhrase(current, label, text));
     this.newLabel = "";
     this.newText = "";
+  }
+
+  async updateCtrlHoldSeconds(value: string | number): Promise<void> {
+    const current = this.config();
+    if (!current) {
+      return;
+    }
+
+    const seconds = Math.max(1, Math.min(30, Number(value) || 5));
+    await this.persist({ ...current, ctrlHoldSeconds: seconds });
+  }
+
+  async updateAutoStartEnabled(enabled: boolean): Promise<void> {
+    const current = this.config();
+    if (!current) {
+      return;
+    }
+
+    await this.persist({ ...current, autoStartEnabled: enabled });
   }
 
   async update(id: string, patch: Partial<Omit<Phrase, "id">>): Promise<void> {
@@ -88,4 +131,5 @@ export class AppComponent implements OnInit {
     return error instanceof Error ? error.message : String(error);
   }
 }
+
 
