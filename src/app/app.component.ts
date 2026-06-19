@@ -15,6 +15,7 @@ import type { AppConfig, Phrase } from "./types";
 export class AppComponent implements OnInit, OnDestroy {
   readonly config = signal<AppConfig | null>(null);
   readonly managerOpen = signal(false);
+  readonly helpOpen = signal(false);
   readonly status = signal("Loading...");
   readonly viewMode = signal<ViewMode>(initialViewMode());
 
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.viewMode.set(event.payload);
         if (event.payload === "compact") {
           this.managerOpen.set(false);
+          this.helpOpen.set(false);
         }
       });
       this.config.set(await loadConfig());
@@ -62,6 +64,22 @@ export class AppComponent implements OnInit, OnDestroy {
       this.status.set("Pasted");
     } catch (error) {
       this.status.set(this.messageFromError(error));
+    }
+  }
+
+  toggleManager(): void {
+    const next = !this.managerOpen();
+    this.managerOpen.set(next);
+    if (next) {
+      this.helpOpen.set(false);
+    }
+  }
+
+  toggleHelp(): void {
+    const next = !this.helpOpen();
+    this.helpOpen.set(next);
+    if (next) {
+      this.managerOpen.set(false);
     }
   }
 
@@ -131,5 +149,6 @@ export class AppComponent implements OnInit, OnDestroy {
     return error instanceof Error ? error.message : String(error);
   }
 }
+
 
 

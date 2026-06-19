@@ -7,9 +7,14 @@
     @if (viewMode() === "compact") {
       <button class="icon-button" type="button" title="Full mode" (click)="expandToFull()">Full</button>
     } @else {
-      <button class="icon-button" type="button" title="Manage phrases" (click)="managerOpen.set(!managerOpen())">
-        {{ managerOpen() ? "Done" : "Manage" }}
-      </button>
+      <div class="toolbar-actions">
+        <button class="icon-button" type="button" title="Help" (click)="toggleHelp()">
+          {{ helpOpen() ? "Hide" : "Help" }}
+        </button>
+        <button class="icon-button" type="button" title="Manage phrases" (click)="toggleManager()">
+          {{ managerOpen() ? "Done" : "Manage" }}
+        </button>
+      </div>
     }
   </header>
 
@@ -22,6 +27,20 @@
       <p class="empty">No enabled phrases.</p>
     }
   </section>
+
+  @if (viewMode() === "full" && helpOpen()) {
+    <section class="help-panel" aria-label="Help">
+      <h2>使用帮助</h2>
+      <ol>
+        <li>把光标放到要输入的位置。</li>
+        <li>长按 Ctrl，达到设置秒数后会在光标上方出现精简面板。</li>
+        <li>点击短语后，应用会隐藏并把文本粘贴到当前输入框。</li>
+        <li>点击 Full 进入完整模式，再用 Manage 管理短语和设置。</li>
+      </ol>
+      <p>关闭窗口会隐藏到托盘；要退出应用，请在托盘菜单里选择 Quit。</p>
+      <p>应用只粘贴文本，不会自动按回车。</p>
+    </section>
+  }
 
   @if (viewMode() === "full" && managerOpen() && config(); as currentConfig) {
     <section class="manager" aria-label="Phrase manager">
@@ -84,6 +103,7 @@
     </section>
   }
 </main>
+
 
 
 

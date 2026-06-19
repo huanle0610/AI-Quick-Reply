@@ -1,7 +1,79 @@
-# Tauri + Angular
+# AI Quick Reply
 
-This template should help get you started developing with Tauri and Angular.
+AI Quick Reply 是一个 Windows 桌面快捷回复工具，适合在 Codex、Claude Code、VS Code、聊天窗口或其他输入框里快速粘贴常用短语。
 
-## Recommended IDE Setup
+它常驻托盘，不打扰当前工作；需要时按快捷键或长按 Ctrl 呼出，点一下短语就会粘贴到当前输入框。
 
-[VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) + [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template).
+## 主要功能
+
+- 常驻系统托盘，关闭窗口时自动隐藏到托盘。
+- 点击短语后只粘贴文本，不自动按回车。
+- 长按 Ctrl 可在鼠标光标上方呼出精简面板。
+- Ctrl 长按秒数可设置，默认 5 秒，范围 1-30 秒。
+- 可从精简模式切换到完整模式。
+- 完整模式可新增、编辑、删除、启用/禁用和排序短语。
+- 默认开机启动，可在设置里关闭。
+
+## 下载安装
+
+打开 GitHub Releases 页面，下载最新版本里的 Windows 安装包：
+
+- `AI Quick Reply_版本号_x64-setup.exe`：推荐，大多数 Windows 用户直接运行。
+- `AI Quick Reply_版本号_x64_en-US.msi`：适合偏好 MSI 安装包的用户。
+
+安装后运行 AI Quick Reply。应用默认隐藏在系统托盘里。
+
+## 基本使用
+
+1. 把光标放到想输入的位置，例如聊天框、终端输入框或编辑器输入框。
+2. 长按 Ctrl，达到设置的秒数后会在光标上方出现精简面板。
+3. 点击一个短语，应用会隐藏并把文本粘贴到当前输入框。
+4. 需要管理短语时，在精简面板点击 `Full`，再点击 `Manage`。
+
+也可以使用默认全局快捷键 `Ctrl+Alt+Space` 显示或隐藏窗口。
+
+## 管理短语
+
+在完整模式里点击 `Manage` 后可以：
+
+- 添加新的短语标签和文本。
+- 修改已有短语。
+- 启用或禁用某条短语。
+- 上移或下移短语顺序。
+- 删除不再需要的短语。
+
+设置会自动保存到本机配置文件中。
+
+## 设置说明
+
+- `Ctrl hold seconds`：长按 Ctrl 呼出精简面板所需秒数。
+- `Start at login`：是否开机自动启动。默认开启，取消勾选后会关闭开机启动。
+
+## 常见问题
+
+### 为什么点击短语后没有粘贴？
+
+请先确认目标输入框仍然是当前活动窗口。应用会把短语写入剪贴板，然后发送一次 `Ctrl+V`，所以目标窗口需要能接收粘贴。
+
+### 关闭窗口后应用是不是退出了？
+
+不是。点击关闭按钮会隐藏到系统托盘。要退出应用，请从托盘菜单选择 `Quit`。
+
+### 能不能自动发送回车？
+
+当前版本不会自动按回车，只负责粘贴文本，避免误发送消息。
+
+## 开发者信息
+
+本项目使用 Tauri 2、Angular 和 Bun 构建。
+
+常用命令：
+
+```powershell
+bun install
+bun run test
+bun run typecheck
+bun run tauri build
+```
+
+发布版本由 GitHub Actions 在推送 `v*` tag 时自动构建并上传到 GitHub Release。

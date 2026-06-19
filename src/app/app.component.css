@@ -62,8 +62,14 @@ button:disabled {
   opacity: 0.45;
 }
 
+.toolbar-actions {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
 .icon-button {
-  min-width: 82px;
+  min-width: 74px;
 }
 
 .phrase-grid {
@@ -106,6 +112,29 @@ button:disabled {
   padding: 16px;
 }
 
+.help-panel {
+  border-top: 1px solid #d8dee9;
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.help-panel h2 {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+.help-panel ol {
+  color: #344054;
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0 0 8px 18px;
+  padding: 0;
+}
+
+.help-panel p {
+  line-height: 1.45;
+  margin-top: 6px;
+}
 .manager {
   border-top: 1px solid #d8dee9;
   margin-top: 14px;
@@ -197,6 +226,7 @@ textarea {
 .danger {
   color: #b42318;
 }
+
 
 
 
