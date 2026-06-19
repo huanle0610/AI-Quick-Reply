@@ -1,0 +1,158 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  color: #1d2430;
+  background: #f5f7fb;
+}
+
+.shell {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  padding: 14px;
+}
+
+.toolbar {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: 18px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+p {
+  margin: 3px 0 0;
+  color: #667085;
+  font-size: 12px;
+}
+
+button,
+input,
+textarea {
+  box-sizing: border-box;
+  font: inherit;
+}
+
+button {
+  border: 1px solid #ccd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1d2430;
+  cursor: pointer;
+  min-height: 34px;
+  padding: 6px 10px;
+}
+
+button:hover:not(:disabled) {
+  border-color: #3563e9;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.icon-button {
+  min-width: 82px;
+}
+
+.phrase-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+}
+
+.phrase-button {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  min-height: 46px;
+  text-align: left;
+}
+
+.phrase-button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phrase-button small {
+  color: #3563e9;
+  font-size: 11px;
+  margin-left: 8px;
+}
+
+.empty {
+  border: 1px dashed #ccd5e1;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.manager {
+  border-top: 1px solid #d8dee9;
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.add-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(80px, 0.8fr) minmax(120px, 1.5fr) auto;
+  margin-bottom: 10px;
+}
+
+input,
+textarea {
+  border: 1px solid #ccd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1d2430;
+  padding: 7px 9px;
+  width: 100%;
+}
+
+.phrase-editor-list {
+  display: grid;
+  gap: 10px;
+}
+
+.phrase-editor {
+  border: 1px solid #d8dee9;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 10px;
+}
+
+.editor-main {
+  display: grid;
+  gap: 8px;
+}
+
+.editor-controls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.editor-controls label {
+  align-items: center;
+  display: inline-flex;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.editor-controls input {
+  width: auto;
+}
+
+.danger {
+  color: #b42318;
+}

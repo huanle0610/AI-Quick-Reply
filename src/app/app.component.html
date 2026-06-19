@@ -1,0 +1,58 @@
+<main class="shell">
+  <header class="toolbar">
+    <div>
+      <h1>AI Quick Reply</h1>
+      <p>{{ status() }}</p>
+    </div>
+    <button class="icon-button" type="button" title="Manage phrases" (click)="managerOpen.set(!managerOpen())">
+      {{ managerOpen() ? "Done" : "Manage" }}
+    </button>
+  </header>
+
+  <section class="phrase-grid" aria-label="Quick replies">
+    @for (phrase of enabledPhrases(); track phrase.id) {
+      <button class="phrase-button" type="button" [title]="phrase.text" (click)="send(phrase)">
+        <span>{{ phrase.label }}</span>
+      </button>
+    } @empty {
+      <p class="empty">No enabled phrases.</p>
+    }
+  </section>
+
+  @if (managerOpen() && config(); as currentConfig) {
+    <section class="manager" aria-label="Phrase manager">
+      <div class="add-row">
+        <input name="newLabel" placeholder="Label" [(ngModel)]="newLabel" />
+        <input name="newText" placeholder="Text to send" [(ngModel)]="newText" />
+        <button type="button" (click)="add()">Add</button>
+      </div>
+
+      <div class="phrase-editor-list">
+        @for (phrase of currentConfig.phrases; track phrase.id; let first = $first; let last = $last) {
+          <article class="phrase-editor">
+            <div class="editor-main">
+              <input
+                [name]="'label-' + phrase.id"
+                [ngModel]="phrase.label"
+                (ngModelChange)="update(phrase.id, { label: $event })"
+              />
+              <textarea
+                rows="2"
+                [name]="'text-' + phrase.id"
+                [ngModel]="phrase.text"
+                (ngModelChange)="update(phrase.id, { text: $event })"
+              ></textarea>
+            </div>
+            <div class="editor-controls">
+              <label><input type="checkbox" [ngModel]="phrase.enabled" (ngModelChange)="update(phrase.id, { enabled: $event })" /> Enabled</label>
+              <button type="button" [disabled]="first" (click)="move(phrase.id, -1)">Up</button>
+              <button type="button" [disabled]="last" (click)="move(phrase.id, 1)">Down</button>
+              <button class="danger" type="button" (click)="remove(phrase.id)">Delete</button>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+</main>
+
