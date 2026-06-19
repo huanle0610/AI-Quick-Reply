@@ -1,6 +1,6 @@
 [package]
 name = "ai-quick-reply"
-version = "0.1.1"
+version = "0.1.2"
 description = "AI quick reply desktop helper"
 authors = ["huan"]
 edition = "2021"
